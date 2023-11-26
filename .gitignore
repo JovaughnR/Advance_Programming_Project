@@ -2,10 +2,13 @@
 * target/classes
 
 # Ignore text file
-text.text
+.text.text
 
 # Ignore image folder
 *./src/main/java/factory/images
 
 # Igonre the test-classes
 .target/test-classes/factory/AppTest.class
+
+# Ignore the DS_Store
+.DS_Store
