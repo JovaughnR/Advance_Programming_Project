@@ -1,0 +1,11 @@
+# Ignore the compile files
+* target/classes
+
+# Ignore text file
+text.text
+
+# Ignore image folder
+*./src/main/java/factory/images
+
+# Igonre the test-classes
+.target/test-classes/factory/AppTest.class

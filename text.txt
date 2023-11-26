@@ -1,0 +1,386 @@
+package factory;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import java.awt.*;
+import java.awt.event.*;
+
+public class SignUp {
+    JPanel top, middle, bottom, submitPanel, borderPanel;
+    JFrame frame;
+    JTextField first_name, last_name, email, phone, password, confirm_password;
+    JTextField street_num, street_name, city, parish_state, zip_code, country;
+    JTextField[] textFields = new JTextField[11];
+    String[] name_labels = { "First Name", "Last Name", "Email", "Phone", "Password", "Confirm Password" };
+    String[] address_labels = { "Street Name", "Street Number", "City", "Parish\\State", "Country" };
+    JButton submit;
+    Border border = new LineBorder(new Color(0, 0, 0, 50), 1);
+    Font font = new Font("Brush Script MT", Font.PLAIN, 17);
+
+    public SignUp() {
+        createFrame();
+    }
+
+    private void createFrame() {
+        frame = new JFrame("Sign Up Form");
+        frame.setSize(800, 900);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        createTextFields();
+        frame.setVisible(true);
+    }
+
+    private void createTextFields() {
+
+        borderPanel = new JPanel(new BorderLayout());
+        ((BorderLayout) borderPanel.getLayout()).setVgap(30);
+        borderPanel.setBounds(95, 20, 600, 870);
+
+        /* configure and Add the top panel to the frame */
+        top = new JPanel(new GridLayout(1, 2));
+
+        // Panel for "First Name"
+        JPanel first = new JPanel(new GridLayout(2, 1));
+        JLabel l1 = new JLabel(name_labels[0]);
+        l1.setHorizontalAlignment(JTextField.CENTER);
+        l1.setFont(font);
+        first_name = new JTextField();
+        first_name.setPreferredSize(new Dimension(100, 60));
+        first.add(l1);
+        first.add(first_name);
+
+        // Panel for "Last Name"
+        JPanel last = new JPanel(new GridLayout(2, 1));
+        JLabel l2 = new JLabel(name_labels[1]);
+        l2.setHorizontalAlignment(JTextField.CENTER);
+        last_name = new JTextField();
+        last_name.setPreferredSize(new Dimension(100, 60));
+        last.add(l2);
+        last.add(last_name);
+        ((GridLayout) top.getLayout()).setHgap(60);
+        ((GridLayout) top.getLayout()).setVgap(0);
+        top.add(first);
+        top.add(last);
+
+        JLabel address_label = new JLabel("Address");
+        address_label.setHorizontalAlignment(JLabel.CENTER);
+
+        /* Configure and add the middle panel to the frame */
+        middle = new JPanel(new GridLayout(3, 2)); // Adjusted grid dimension
+
+        JPanel third = new JPanel(new GridLayout(2, 1));
+        JLabel l3 = new JLabel("Street Name");
+        ((GridLayout) third.getLayout()).setVgap(-30);
+        l3.setHorizontalAlignment(JLabel.CENTER);
+        street_name = new JTextField();
+        street_name.setPreferredSize(new Dimension(50, 80));
+        third.add(l3);
+        third.add(street_name);
+
+        JPanel fourth = new JPanel(new GridLayout(2, 1));
+        JLabel l4 = new JLabel("Street Number");
+        ((GridLayout) fourth.getLayout()).setVgap(-30);
+        l4.setHorizontalAlignment(JLabel.CENTER);
+        street_num = new JTextField();
+        street_num.setPreferredSize(new Dimension(50, 10));
+        fourth.add(l4);
+        fourth.add(street_num);
+
+        middle.add(third);
+        middle.add(fourth);
+
+        JPanel fifth = new JPanel(new GridLayout(2, 1));
+        JLabel l5 = new JLabel("City");
+        ((GridLayout) fifth.getLayout()).setVgap(-30);
+        l5.setHorizontalAlignment(JLabel.CENTER);
+        city = new JTextField();
+        city.setPreferredSize(new Dimension(50, 10));
+        fifth.add(l5);
+        fifth.add(city);
+
+        JPanel sixth = new JPanel(new GridLayout(2, 1));
+        JLabel l6 = new JLabel("Parish State");
+        ((GridLayout) sixth.getLayout()).setVgap(-30);
+        l6.setHorizontalAlignment(JLabel.CENTER);
+        parish_state = new JTextField();
+        parish_state.setPreferredSize(new Dimension(50, 10));
+        sixth.add(l6);
+        sixth.add(parish_state);
+
+        middle.add(fifth);
+        middle.add(sixth);
+        middle.setBorder(border);
+
+        JPanel seventh = new JPanel(new GridLayout(2, 1));
+        JLabel l7 = new JLabel("Zip Code");
+        ((GridLayout) seventh.getLayout()).setVgap(-30);
+        l7.setHorizontalAlignment(JLabel.CENTER);
+        zip_code = new JTextField();
+        zip_code.setPreferredSize(new Dimension(50, 10));
+        seventh.add(l7);
+        seventh.add(zip_code);
+
+        JPanel eigth = new JPanel(new GridLayout(2, 1));
+        JLabel l8 = new JLabel("Country");
+        ((GridLayout) eigth.getLayout()).setVgap(-30);
+        l8.setHorizontalAlignment(JLabel.CENTER);
+        country = new JTextField();
+        country.setPreferredSize(new Dimension(50, 10));
+        eigth.add(l8);
+        eigth.add(country);
+
+        middle.add(seventh);
+        middle.add(eigth);
+        ((GridLayout) middle.getLayout()).setHgap(20);
+
+        JPanel centralPanel = new JPanel(new BorderLayout());
+        centralPanel.add(top, BorderLayout.NORTH);
+        centralPanel.add(address_label, BorderLayout.CENTER);
+        centralPanel.add(middle, BorderLayout.SOUTH);
+        ((BorderLayout) centralPanel.getLayout()).setVgap(20);
+        borderPanel.add(centralPanel, BorderLayout.NORTH);
+
+        /* Configure and add the bottom panel to the frame */
+        bottom = new JPanel(new GridLayout(2, 2));
+        // Email and Phone in one row
+
+        JPanel nineth = new JPanel(new GridLayout(2, 1));
+        JLabel l9 = new JLabel("Email");
+        ((GridLayout) nineth.getLayout()).setVgap(-30);
+        l9.setHorizontalAlignment(JLabel.CENTER);
+        email = new JTextField();
+        email.setPreferredSize(new Dimension(50, 10));
+        nineth.add(l9);
+        nineth.add(email);
+
+        JPanel tenth = new JPanel(new GridLayout(2, 1));
+        JLabel l10 = new JLabel("Phone");
+        ((GridLayout) tenth.getLayout()).setVgap(-30);
+        l10.setHorizontalAlignment(JLabel.CENTER);
+        phone = new JTextField();
+        phone.setPreferredSize(new Dimension(50, 10));
+        tenth.add(l10);
+        tenth.add(phone);
+
+        JPanel eleventh = new JPanel(new GridLayout(2, 1));
+        JLabel l11 = new JLabel("Password");
+        ((GridLayout) eleventh.getLayout()).setVgap(-30);
+        l11.setHorizontalAlignment(JLabel.CENTER);
+        password = new JTextField();
+        password.setPreferredSize(new Dimension(50, 10));
+        eleventh.add(l11);
+        eleventh.add(password);
+
+        bottom.add(nineth);
+        bottom.add(tenth);
+
+        JPanel twelveth = new JPanel(new GridLayout(2, 1));
+        JLabel l12 = new JLabel("Confirm Password");
+        ((GridLayout) twelveth.getLayout()).setVgap(-30);
+        l12.setHorizontalAlignment(JLabel.CENTER);
+        confirm_password = new JTextField();
+        confirm_password.setPreferredSize(new Dimension(50, 100));
+        twelveth.add(l12);
+        twelveth.add(confirm_password);
+
+        bottom.add(eleventh);
+        bottom.add(twelveth);
+        bottom.setBorder(border);
+
+        submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        submit = new JButton("Sign Up");
+        submit.setPreferredSize(new Dimension(100, 50));
+        submitPanel.add(submit);
+
+        borderPanel.add(bottom, BorderLayout.CENTER);
+        borderPanel.add(submitPanel, BorderLayout.SOUTH);
+        frame.add(borderPanel);
+    }
+
+    public static void main(String[] args) {
+        new SignUp();
+    }
+}
+
+
+
+
+
+
+
+
+
+package factory;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import java.awt.*;
+import java.awt.event.*;
+
+public class SignUp {
+    JFrame frame;
+    JPanel top, middle, bottom, submitPanel, borderPanel;
+    JTextField[] textFields = new JTextField[12];
+
+    String[] n_label = {
+            "First Name", "Last Name", "Email",
+            "Phone", "Password", "Confirm Password",
+    };
+    String[] a_label = {
+            "Street Name", "Street Number", "City",
+            "Parish\\State", "Zip Code", "Country",
+    };
+
+    JButton submit;
+    Border border = new LineBorder(new Color(0, 0, 0, 50), 1);
+    Font font = new Font("Brush Script MT", Font.PLAIN, 17);
+
+    public SignUp() {
+        createFrame();
+    }
+
+    private void createInnerPanels() {
+        JPanel top, middle, bottom, outerPanel, centralPanel, submitPanel;
+        for (int i = 0; i < 2; i++) {
+            top = new JPanel(new GridLayout(1, 2));
+            top.add(createInsideTextFieldPanel(i));
+        }
+
+        for (int i = 2; i < 8; i++) {
+            middle = new JPanel(new GridLayout(3, 2));
+            middle.add(createInsideTextFieldPanel(i));
+        }
+
+        for (int i = 8; i < 12; i++) {
+            bottom = new JPanel(new GridLayout(2, 2));
+            
+        }
+    }
+
+    private JPanel createInsideTextFieldPanel(int i) {
+
+        JPanel panel = new JPanel(new GridLayout(2, 1));
+        JLabel label = new JLabel((i < 6) ? n_label[i] : a_label[i]);
+        textFields[i] = new JTextField();
+        label.setHorizontalAlignment(JLabel.CENTER);
+        label.setFont(font);
+        panel.add(label);
+        panel.add(textFields[i]);
+        if (i > 2) {
+            textFields[i].setPreferredSize(new Dimension(100, 60));
+            ((GridLayout) panel.getLayout()).setVgap(-30);
+        } else
+            textFields[i].setPreferredSize(new Dimension(50, 80));
+
+        return panel;
+
+    }
+
+    private void createFrame() {
+        frame = new JFrame("Sign Up Form");
+        frame.setSize(800, 900);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setLayout(null);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        // createTextFields();
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new SignUp();
+    }
+}
+
+
+
+
+
+
+
+
+package factory;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+/**
+ * Hello world!
+ *
+ */
+public class App {
+    private static Socket socket;
+    private static ObjectInputStream inFromServer = null;
+    private static ObjectOutputStream outToServer = null;
+    private static boolean isEmp = false;
+
+    public static void connect(String host, int port) {
+        try {
+            App.socket = new Socket(host, port);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void configureStreams() {
+        try {
+            App.inFromServer = new ObjectInputStream(socket.getInputStream());
+            App.outToServer = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void displayPerson(Person p) {
+        if (App.isEmp) {
+            Employee employee = (Employee) p;
+            System.out.println(employee);
+        } else {
+            Customer customer = (Customer) p;
+            System.out.println(customer);
+        }
+        // configureStreams();
+        // try {
+        // outToServer.writeObject("sign up");
+        // String serverSays = (String) inFromServer.readObject();
+        // if (serverSays.equalsIgnoreCase("employee or customer")) {
+        // if (signUp.isCustomer) {
+        // outToServer.writeObject("customer");
+        // outToServer.flush();
+        // outToServer.writeObject((Customer) signUp.getEntity());
+        // } else if (!signUp.isCustomer) {
+        // outToServer.writeObject("employee");
+        // outToServer.flush();
+        // outToServer.writeObject((Employee) signUp.getEntity());
+        // }
+        // serverSays = (String) inFromServer.readObject();
+        // if (serverSays.equalsIgnoreCase("recieved")) {
+        // }
+
+        // }
+        // } catch (ClassNotFoundException | IOException e) {
+        // System.out.println(e.getMessage());
+        // }
+
+    }
+
+    public static void engage() {
+        new SignUp();
+    }
+
+    public static void main(String[] args) {
+        String host = "127.0.0.1";
+        int port = 8000;
+        App.connect(host, port);
+        App.engage();
+    }
+
+}
