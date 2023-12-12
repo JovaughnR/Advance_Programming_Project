@@ -1,25 +1,24 @@
 package common;
 
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-class Generator implements Serializable {
+public class Generator implements Serializable {
     private static final long serialVersionUID = 12l;
-    private static long customerCounter = 100001;
 
-    public static long generateCustomerId() {
-        return customerCounter++;
+    public static String hash(String string) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(string.getBytes());
+
+            StringBuilder hexStringBuilder = new StringBuilder();
+            for (byte b : hashedBytes)
+                hexStringBuilder.append(String.format("%02x", b));
+
+            return hexStringBuilder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
     }
-
-    // public static void main(String[] args) throws RangeError {
-    // Address address = new Address("TownHall", 233, "claremont", "St. Ann",
-    // "Canada", "3562");
-    // Person p = new Person(135, "John", "jones", "jon@mail.com", "473925",
-    // address);
-    // p.setPassword("helloworld");
-    // System.out.println(p);
-    // // Customer customer = new Customer(123, "James", "percival",
-    // "james@mail.com",
-    // // "52515", address);
-
-    // }
 }

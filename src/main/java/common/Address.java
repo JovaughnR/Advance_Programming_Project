@@ -19,7 +19,7 @@ public class Address implements Serializable {
         setStreetNumber(num);
         setCountry(country);
         setCity(city);
-        set_parish_state(parish_state);
+        setParishState(parish_state);
         setZipCode(zipCode);
     }
 
@@ -33,10 +33,6 @@ public class Address implements Serializable {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public void set_parish_state(String parish_state) {
-        this.parish_state = parish_state;
     }
 
     public void setCountry(String country) {
@@ -74,5 +70,9 @@ public class Address implements Serializable {
     @Override
     public String toString() {
         return streetNumber + " " + streetName + " " + city + " " + parish_state + " " + zipCode + " " + country;
+    }
+
+    public void setParishState(String text) {
+        this.parish_state = text;
     }
 }

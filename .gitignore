@@ -1,14 +1,20 @@
 # Ignore the compile files
-* target/classes
+target/classes
 
-# Ignore text file
-.text.text
+# Ignore text files
+*.txt
 
 # Ignore image folder
-*./src/main/java/factory/images
+/src/main/java/factory/images/
 
-# Igonre the test-classes
-.target/test-classes/factory/AppTest.class
+# Ignore the test classes
+target/test-classes/factory/AppTest.class
 
 # Ignore the DS_Store
 .DS_Store
+
+# Ignore the vscode folder
+.vscode
+
+# Ignore all generated pdf
+*.pdf

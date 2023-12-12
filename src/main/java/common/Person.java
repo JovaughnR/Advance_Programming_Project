@@ -1,8 +1,6 @@
 package common;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class Person implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -12,19 +10,18 @@ public class Person implements Serializable {
     protected String email;
     protected String phone;
     protected String password;
-
     public Address address;
 
     public Person() {
     }
 
-    public Person(int id, String fName, String lName, String email, String phone, Address address) {
+    public Person(int id, String fn, String ln, String em, String ph, Address addr) {
         setId(id);
-        setFirstName(fName);
-        setLastName(lName);
-        setEmail(email);
-        setPhone(phone);
-        setAddress(address);
+        setFirstName(fn);
+        setLastName(ln);
+        setEmail(em);
+        setPhone(ph);
+        setAddress(addr);
     }
 
     public void setId(int id) {
@@ -67,22 +64,6 @@ public class Person implements Serializable {
         return this.phone;
     }
 
-    public static String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
-
-            StringBuilder hexStringBuilder = new StringBuilder();
-            for (byte b : hashedBytes)
-                hexStringBuilder.append(String.format("%02x", b));
-
-            return hexStringBuilder.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public Address getAddress() {
         return this.address;
     }
@@ -92,7 +73,7 @@ public class Person implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = hashPassword(password);
+        this.password = Generator.hash(password);
     }
 
     public String getPassword() {
@@ -108,8 +89,13 @@ public class Person implements Serializable {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
-                ", address=" + address.toString() +
+                // ", address=" + address.toString() +
                 '}';
     }
+
+    // public String[] personArray() {
+    // String[] person = { firstName, lastName, email, phone };
+    // return person;
+    // }
 
 }

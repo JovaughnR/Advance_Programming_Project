@@ -384,3 +384,805 @@ public class App {
     }
 
 }
+
+
+
+
+
+
+
+package factory;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+import common.Person;
+
+public class App {
+    private static Socket socket;
+    private static ObjectInputStream inFromServer = null;
+    private static ObjectOutputStream outToServer = null;
+    private static boolean isEmp = false;
+
+    public static void connect(String host, int port) {
+        try {
+            App.socket = new Socket(host, port);
+            configureStreams();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void configureStreams() {
+        try {
+            App.outToServer = new ObjectOutputStream(App.socket.getOutputStream());
+            App.outToServer.flush(); // Ensure data is sent immediately
+            App.inFromServer = new ObjectInputStream(App.socket.getInputStream());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static String signUpMessage(String name, int id) {
+        return "Congratulations " + name + "! You've been successfully signed up." +
+                "\n\nYour Identification Number: [ " + id + " ]\n\nWhen logging in," +
+                " use this number along with the password you used during" +
+                " signup.\n\n Welcome to our system! Thank you for joining.";
+    }
+
+    public static int signUpEntity(Person p) {
+        System.out.println("Signing up entity");
+        try {
+            App.outToServer.writeObject("sign up");
+            App.outToServer.flush();
+
+            try {
+                String serverSays = (String) inFromServer.readObject();
+                System.out.println("Server says: " + serverSays);
+
+                if (serverSays.equalsIgnoreCase("employee or customer")) {
+                    String msg = (App.isEmp) ? "employee" : "customer";
+                    outToServer.writeObject(msg);
+                    outToServer.flush();
+
+                    if (msg.equalsIgnoreCase("customer")) {
+
+                        outToServer.writeObject(p);
+                        outToServer.flush();
+                    }
+
+                    if (msg.equalsIgnoreCase("employee")) {
+
+                        outToServer.writeObject(p);
+                        outToServer.flush();
+                    }
+
+                    int id = (Integer) inFromServer.readObject();
+                    return id;
+                }
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
+
+    public static void initiate() {
+        System.out.println(App.socket.getLocalPort());
+        new SignUp();
+    }
+
+    public static void main(String[] args) {
+        String host = "127.0.0.1";
+        int port = 8000;
+        App.connect(host, port);
+        App.initiate();
+    }
+}
+
+// package factory;
+
+// import java.io.IOException;
+// import java.io.ObjectInputStream;
+// import java.io.ObjectOutputStream;
+// import java.net.Socket;
+
+// /**
+// * Hello world!
+// *
+// */
+// public class App {
+// private static Socket socket;
+// private static ObjectInputStream inFromServer = null;
+// private static ObjectOutputStream outToServer = null;
+// private static boolean isEmp = false;
+
+// public static void connect(String host, int port) {
+// try {
+// App.socket = new Socket(host, port);
+// } catch (IOException e) {
+// System.out.println(e.getMessage());
+// }
+// }
+
+// private static void configureStreams() {
+// try {
+
+// App.inFromServer = new ObjectInputStream(App.socket.getInputStream());
+// App.outToServer = new ObjectOutputStream(App.socket.getOutputStream());
+// App.outToServer.flush(); // Ensure data is sent immediately
+
+// // }
+// // System.out.println("Socket: " + App.socket.isConnected());
+// // System.out.println("Before: " + App.inFromServer);
+// // System.out.println("Before: " + App.outToServer);
+// // App.inFromServer = new ObjectInputStream(App.socket.getInputStream());
+// // App.outToServer = new ObjectOutputStream(App.socket.getOutputStream());
+// // System.out.println("After: " + App.inFromServer);
+// // System.out.println("After: " + App.outToServer);
+// } catch (IOException e) {
+// System.out.println(e.getMessage());
+// } finally {
+// try {
+// if (App.outToServer != null) {
+// App.outToServer.close();
+// }
+// if (App.inFromServer != null) {
+// App.inFromServer.close();
+// }
+// } catch (IOException e) {
+// System.out.println("Error closing streams: " + e.getMessage());
+// }
+// }
+// }
+
+// public static void signUpEntity(Person p) {
+// System.out.println("Signing up entity");
+// App.configureStreams();
+// System.out.println("Finish configuring Streams");
+// System.out.println("Socket Status: " + App.socket.isConnected());
+// try {
+// System.out.println("Inside Try Block");
+// System.out.println(App.outToServer);
+// App.outToServer.writeObject("sign up");
+// String serverSays = (String) inFromServer.readObject();
+// System.out.println("Server says: " + serverSays);
+// if (serverSays.equalsIgnoreCase("employee or customer")) {
+// if (App.isEmp) {
+// App.outToServer.writeObject("customer");
+// App.outToServer.flush();
+// App.outToServer.writeObject((Customer) p);
+// } else if (!App.isEmp) {
+// App.outToServer.writeObject("employee");
+// App.outToServer.flush();
+// App.outToServer.writeObject((Employee) p);
+// }
+// serverSays = (String) inFromServer.readObject();
+// if (serverSays.equalsIgnoreCase("recieved")) {
+// }
+
+// }
+// } catch (ClassNotFoundException | IOException e) {
+// System.out.println(e.getMessage());
+// }
+
+// }
+
+// public static void initiate() {
+// System.out.println(App.socket.getLocalPort());
+// new SignUp();
+// }
+
+// public static void main(String[] args) {
+// String host = "127.0.0.1";
+// int port = 8000;
+// App.connect(host, port);
+// App.initiate();
+// }
+
+// }
+
+
+ Inventor.java ****************************************************************
+  Inventor.java ****************************************************************
+
+ package factory;
+
+import javax.swing.*;
+
+import common.Equipment;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class InventoryInterface implements ActionListener {
+    private JFrame frame;
+    private JTabbedPane tabbedPane = new JTabbedPane();
+    private JPanel[] panel = new JPanel[4];
+    private Color[] colors = { Color.blue, Color.green, Color.red, Color.magenta };
+    private String[] categories = { "Sounding", "Lighting", "Powering", "Staging" };
+
+
+    String[] sounding = {
+        "crowd_control_barrires.jpeg", "mic.jpeg", "podium_and_lecturn.jpeg", 
+        "portable_stage.jpeg", "stage_backdrops.jpeg", "stage_curtains.jpeg",
+        "stage_platforms.jpeg", "stage_prop_decoration.jpeg", "stage_risers.jpeg", 
+        "stage_skirting.jpeg", "stage_step_stairs.jpeg"
+    };
+
+    public InventoryInterface() {
+        createFrame();
+
+        for (int i = 0; i < categories.length; i++)
+            createEquipmentTab(categories[i], i);
+
+        frame.add(tabbedPane);
+        constructInventory();
+        frame.setVisible(true);
+    }
+
+    private JPanel constructPanel(String imagePath, String name, int quantity) {
+        JPanel equimentPanel = new JPanel(new BorderLayout());
+        JLabel equipmentName = new JLabel(name);
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        imagePanel.setPreferredSize(new Dimension(200, 200));
+        imagePanel.add(new JLabel(scaleImage(imagePath, 200, 200)));
+        JLabel quantityLabel = new JLabel(quantity + "");
+        equimentPanel.add(equipmentName, BorderLayout.NORTH);
+        equimentPanel.add(imagePanel, BorderLayout.CENTER);
+        equimentPanel.add(quantityLabel);
+        return equimentPanel;
+    }
+
+    private void createFrame() {
+        frame = new JFrame("Inventory");
+        frame.setSize(1600, 1100);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    }
+
+    public void createEquipmentTab(String category, int i) {
+        panel[i] = new JPanel(new GridLayout());
+        panel[i].setBackground(colors[i]);
+        tabbedPane.setBounds(0, 0, 1600, 1000);
+        tabbedPane.add(category, panel[i]);
+    }
+
+    private ImageIcon scaleImage(String path, int width, int height) {
+        ImageIcon icon = new ImageIcon(getClass().getResource(path));
+        Image scaleImage = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaleImage);
+    }
+
+    private void constructInventory() {
+        Equipment[] equipments = App.displayEquipments();
+        for (Equipment equipment : equipments) {
+            if (equipment.getCategory().equalsIgnoreCase("lighting")) {
+                panel[1].add(constructPanel(
+                        "", equipment.getEquipmentName(),
+                        equipment.getQuantity()));
+            }
+            if (equipment.getCategory().equalsIgnoreCase("sound")) {
+                panel[0].add(constructPanel(
+                        "", equipment.getEquipmentName(),
+                        equipment.getQuantity()));
+            }
+            if (equipment.getCategory().equalsIgnoreCase("staging")) {
+                panel[3].add(constructPanel(
+                        "", equipment.getEquipmentName(),
+                        equipment.getQuantity()));
+            }
+            if (equipment.getCategory().equalsIgnoreCase("powering")) {
+                panel[2].add(constructPanel(
+                        "", equipment.getEquipmentName(),
+                        equipment.getQuantity()));
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    // public static void main(String[] args) {
+    // App.connect("localhost", 8000);
+    // new InventoryInterface();
+    // }
+}
+
+ ****************************************************************
+****************************************************************
+
+
+
+
+
+
+
+
+    public static ArrayList<Rental> sortRentals(ArrayList<Rental> rentals) {
+        System.out.println("List before sorting: " + rentals);
+        ArrayList<Rental> sortedRentalList = new ArrayList<>();
+
+        // loop through each rental in the list of rentals
+        for (int i = 0; i < rentals.size(); i++) {
+            Rental currentRental = rentals.get(i);
+            int d1 = Date.dateToInt(currentRental.getDate());
+
+            for (int j = i + 1; j < rentals.size(); j++) {
+                int d2 = Date.dateToInt(rentals.get(j).getDate());
+
+                if (d2 < d1) {
+                    currentRental = rentals.get(j);
+                    d1 = Date.dateToInt(currentRental.getDate());
+                }
+            }
+            // Adds this newly found rental to the sorted list
+            sortedRentalList.add(currentRental);
+        }
+        // Return the sorted list of rentals according to the a-z
+        System.out.println("List After sorting: " + sortedRentalList);
+
+        return sortedRentalList;
+    }
+
+
+******************************************************************************************************************
+newly modified version of App
+package interfaces;
+
+/**
+   * @author Jovaughn Rose
+   * @see https://github.com/jovaughnR
+   */
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
+
+import common.Equipment;
+import common.Person;
+import common.Rental;
+
+public class App {
+    private static Socket socket;
+    private static ObjectInputStream inFromServer = null;
+    private static ObjectOutputStream outToServer = null;
+    public static boolean isEmp = false;
+    public static HashMap<String, Equipment> map = new HashMap<>();
+    final static int width = 1200, height = 1000;
+    public static boolean sorted = false;
+
+    // set the current user to temporary value for testing remove when finish
+    public static int currentUser = 111111;
+    // public static Date date;
+
+    public static void connect(String host, int port) {
+        try {
+            App.socket = new Socket(host, port);
+            configureStreams();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void configureStreams() throws IOException {
+        App.outToServer = new ObjectOutputStream(App.socket.getOutputStream());
+        App.outToServer.flush();
+        App.inFromServer = new ObjectInputStream(App.socket.getInputStream());
+    }
+
+    public static String signUpMessage(String name, int id) {
+        return String.format(
+                "Congratulations %s! You've been successfully signed up.%n%nYour Identification Number: [ %d ]%n%nWhen logging in, use this number along with the password you used during signup.%n%nWelcome to our system! Thank you for joining.",
+                name, id);
+    }
+
+    public static int signUpEntity(Person p) {
+        App.write("signUp", true);
+        App.write((App.isEmp) ? "employee" : "customer", true);
+        return (Integer) App.write(p, true);
+    }
+
+    public static Boolean signIn(int id, String password) {
+        App.write("signIn", true);
+        App.write(id, true);
+        return (Boolean) App.write(password, true);
+    }
+
+    public static List<Equipment> getEquipments() {
+        try {
+            App.outToServer.writeObject("equipments");
+            @SuppressWarnings("unchecked")
+            List<Equipment> equipments = (List<Equipment>) inFromServer.readObject();
+            return equipments;
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static void loadEquipment() {
+        List<Equipment> equipments = App.getEquipments();
+        for (Equipment equipment : equipments)
+            App.map.put(equipment.getEquipmentName(), equipment);
+    }
+
+    public static void initiate(String host, int port) {
+        App.connect(host, port);
+        System.out.println("App connected on local port: " + App.socket.getLocalPort());
+        App.loadEquipment();
+        SwingUtilities.invokeLater(Login::new);
+    }
+
+    public void sendMessage(String message) {
+        try {
+            App.outToServer.writeObject(message);
+        } catch (IOException e) {
+            System.out.println("Error sending message: " + e.getMessage());
+        }
+    }
+
+    public static void sendType(String type) {
+        try {
+            App.outToServer.writeObject(type);
+        } catch (IOException e) {
+            System.out.println("Error sending type: " + e.getMessage());
+        }
+    }
+
+    public static Equipment requestEquipment(int id) {
+        App.write("requestEquipment", true);
+        return (Equipment) App.write(id, true);
+    }
+
+    public static boolean isEquipmentAvailable(int id) {
+        Equipment equipment = App.requestEquipment(id);
+        return ("Available".equalsIgnoreCase(equipment.getAvailabilityStatus()));
+    }
+
+    public static boolean makeRentalRequest(Rental rental) {
+        App.write("requestRental", true);
+        int id = rental.getEquipmentId();
+        if ((Boolean) App.write(id, true)) {
+            App.write(rental, false);
+            return true;
+        } else
+            App.write(false, false);
+        return false;
+    }
+
+    public static ArrayList<Rental> getRentalRequests() {
+        @SuppressWarnings("unchecked")
+        ArrayList<Rental> rentals = (ArrayList<Rental>) App.write("getRentalRequest", true);
+        if (App.sorted)
+            return RentalRequest.sortRentals(rentals);
+        return rentals;
+    }
+
+    public static Object getObject(int id, String query) {
+        App.write(query, true);
+        return App.write(id, true);
+    }
+
+    public static void removeRentalRequest(int equipId, int cusId) {
+        App.write("removeRentalRequest", true);
+        App.write(equipId, true);
+        App.write(cusId, false);
+    }
+
+    /**
+     * @param obj  represents the specified object to be written to the ouputstraem
+     * @param auto should be true only if an object is expected from the input
+     *             stream
+     */
+
+    private static Object write(Object obj, boolean auto) {
+        try {
+            App.outToServer.writeObject(obj);
+            App.outToServer.flush();
+            if (auto)
+                return App.inFromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+
+        String host = "127.0.0.1";
+        int port = 8000;
+        App.initiate(host, port);
+        // // App.connect(host, port);
+        // System.out.println(App.getEquipments());
+
+        // Equipment[] equip = App.displayEquipments();
+        // for (Equipment e : equip)
+        // System.out.println(e);
+        // App.initiate();
+    }
+}
+
+
+
+package interfaces;
+
+/**
+   * @author Jovaughn Rose
+   * @see https://github.com/jovaughnR
+   */
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
+// import common.Date;
+import common.Equipment;
+import common.Person;
+import common.Rental;
+
+public class App {
+    private static Socket socket;
+    private static ObjectInputStream inFromServer = null;
+    private static ObjectOutputStream outToServer = null;
+    public static boolean isEmp = false;
+    public static HashMap<String, Equipment> map = new HashMap<>();
+    final static int width = 1200, height = 1000;
+    public static boolean sorted = false;
+
+    // set the current user to temporary value for testing remove when finish
+    public static int currentUser = 111111;
+    // public static Date date;
+
+    public static void connect(String host, int port) {
+        try {
+            App.socket = new Socket(host, port);
+            configureStreams();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static void configureStreams() throws IOException {
+        App.outToServer = new ObjectOutputStream(App.socket.getOutputStream());
+        App.outToServer.flush();
+        App.inFromServer = new ObjectInputStream(App.socket.getInputStream());
+    }
+
+    public static String signUpMessage(String name, int id) {
+        return String.format(
+                "Congratulations %s! You've been successfully signed up.%n%nYour Identification Number: [ %d ]%n%nWhen logging in, use this number along with the password you used during signup.%n%nWelcome to our system! Thank you for joining.",
+                name, id);
+    }
+
+    public static int signUpEntity(Person p) {
+        App.write("signUp", true);
+        App.write((App.isEmp) ? "employee" : "customer", false);
+        return (Integer) App.write(p, true);
+    }
+
+    public static Boolean signIn(int id, String password) {
+        App.write("signIn", true);
+        App.write(id, true);
+        return (Boolean) App.write(password, true);
+    }
+
+    public static List<Equipment> getEquipments() {
+        try {
+            App.outToServer.writeObject("equipments");
+            System.out.println("Requesting equipments from server");
+            @SuppressWarnings("unchecked")
+            List<Equipment> equipments = (List<Equipment>) inFromServer.readObject();
+            return equipments;
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static void loadEquipment() {
+        List<Equipment> equipments = App.getEquipments();
+        for (Equipment equipment : equipments)
+            App.map.put(equipment.getEquipmentName(), equipment);
+    }
+
+    public static void initiate(String host, int port) {
+        Thread loginThread = new Thread(() -> {
+            SwingUtilities.invokeLater(Login::new);
+        });
+
+        // loginThread.start();
+
+        Thread other = new Thread(() -> {
+            String msg = "connected on local port: ";
+            App.connect(host, port);
+            System.out.println(msg + App.socket.getLocalPort());
+            App.loadEquipment();
+        });
+
+        other.start();
+    }
+
+    public void sendMessage(String message) {
+        try {
+            App.outToServer.writeObject(message);
+        } catch (IOException e) {
+            System.out.println("Error sending message: " + e.getMessage());
+        }
+    }
+
+    public static void sendType(String type) {
+        try {
+            App.outToServer.writeObject(type);
+        } catch (IOException e) {
+            System.out.println("Error sending type: " + e.getMessage());
+        }
+    }
+
+    // public static Equipment requestEquipment(int id) {
+    // try {
+    // App.outToServer.writeObject("requestEquipment");
+    // App.inFromServer.readObject();
+    // App.outToServer.writeObject(id);
+    // return (Equipment) inFromServer.readObject();
+    // } catch (IOException | ClassNotFoundException e) {
+    // System.out.println("Error requesting equipment: " + e.getMessage());
+    // }
+    // return null;
+    // }
+
+    public static boolean isEquipmentAvailable(int id) {
+        Equipment equipment = (Equipment) App.getObject(id, "requestEquipment");
+        return ("Available".equalsIgnoreCase(equipment.getAvailabilityStatus()));
+    }
+
+    public static boolean makeRentalRequest(Rental rental) {
+        App.write("requestRental", true);
+        int id = rental.getEquipmentId();
+        if ((Boolean) App.write(id, true)) {
+            App.write(rental, false);
+            return true;
+        } else
+            App.write(false, false);
+        return false;
+    }
+
+    public static ArrayList<Rental> getRentalRequests() {
+        try {
+            @SuppressWarnings("unchecked")
+            ArrayList<Rental> rentals = (ArrayList<Rental>) inFromServer.readObject();
+            System.out.println("Rental request recieved: " + rentals);
+            if (App.sorted)
+                return RentalRequest.sortRentals(rentals);
+            return rentals;
+
+        } catch (ClassNotFoundException | IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static Object getObject(int id, String query) {
+        App.write(query, true);
+        return App.write(id, true);
+    }
+
+    public static void removeRentalRequest(int equipId, int cusId) {
+        App.write("removeRentalRequest", true);
+        App.write(equipId, true);
+        App.write(cusId, false);
+    }
+
+    private static Object write(Object obj, boolean auto) {
+        try {
+            App.outToServer.writeObject(obj);
+            App.outToServer.flush();
+            if (auto)
+                return App.inFromServer.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+
+        String host = "127.0.0.1";
+        int port = 8000;
+        App.initiate(host, port);
+        // // App.connect(host, port);
+        // System.out.println(App.getEquipments());
+
+        // Equipment[] equip = App.displayEquipments();
+        // for (Equipment e : equip)
+        // System.out.println(e);
+        // App.initiate();
+    }
+}
+
+
+
+
+
+
+    public static void getMessage() {
+        
+
+
+
+
+
+
+
+
+        Thread readThread = new Thread(() -> {
+            try {
+                Message message = (Message) App.inFromServer.readObject();
+                System.out.println("MEssage from server: " + message);
+                MessagingApp.appendMessage(message.getEmployeeId() + ": " + message.getMessage());
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("Error reading the message: " + e.getMessage());
+            }
+        });
+
+        Thread writeThread = new Thread(() -> {
+            try {
+                while (MessagingApp.isActive) {
+                    System.out.println("Sending to server: isThereAmessageForMe");
+                    App.outToServer.writeObject("isThereAmessageForMe");
+                    App.outToServer.flush();
+
+                    boolean status = (Boolean) App.inFromServer.readObject();
+                    System.out.println("\n\nStatus on message from server: " + status);
+
+                    if (status) {
+                        // if there is a message start the read thread
+                        readThread.start();
+                        readThread.join();
+
+                    } else if (!status)
+                        System.out.println("No messages found");
+                }
+
+                // stop the readthread if it is alive
+                if (readThread.isAlive()) {
+                    System.out.println("Readthread is alive: " + readThread.isAlive());
+                    readThread.interrupt();
+                }
+                App.outToServer.flush();
+
+            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+                System.out.println("Error writing to server: " + e.getCause());
+                e.printStackTrace();
+            }
+        });
+        writeThread.start();
+        try {
+            writeThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
