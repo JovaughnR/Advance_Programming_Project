@@ -44,14 +44,15 @@ public class Login implements ActionListener {
                 passField.setBorder(new LineBorder(Color.red));
                 JOptionPane.showMessageDialog(frame, "Incorrect identification or password");
             }
+
         } else if (event.getSource() == customerSignUp) {
             App.isEmp = false;
-            new SignUp();
+            SwingUtilities.invokeLater(SignUp::new);
         }
 
         else if (event.getSource() == employeeSignUp) {
             App.isEmp = true;
-            new SignUp();
+            SwingUtilities.invokeLater(SignUp::new);
         }
 
         this.frame.dispose();
